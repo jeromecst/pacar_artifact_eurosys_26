@@ -1,0 +1,17 @@
+[global]
+filename=single.fio
+buffered=1
+invalidate=0
+directory=/mnt
+size=${SIZE}
+runtime=${RUNTIME}
+time_based
+bs=64k
+norandommap
+;random_distribution=zipf
+
+group_reporting
+
+[readers]
+rw=randread
+numjobs=${NUMREADER}
