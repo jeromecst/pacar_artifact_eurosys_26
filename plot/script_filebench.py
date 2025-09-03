@@ -90,6 +90,7 @@ skiplist = ["webproxy", "oltp", "varmail"]
 for skip in skiplist:
     df = df[df['Workload'] != skip]
 
+plt.figure(figsize=(20, 16))
 plt.rcParams.update({'font.size': 24})
 g = sns.catplot(
     data=df, kind="bar",
@@ -98,8 +99,12 @@ g = sns.catplot(
 )
 g._legend.remove()
 plt.legend(title=None, loc='upper right')
-plt.show()
 
+plt.savefig("filebench_bandwidth.png")
+plt.show()
+plt.clf()
+
+plt.figure(figsize=(20, 16))
 g = sns.catplot(
     data=df, kind="bar",
     x="Workload", y="Latency (ms)", hue="Version",
@@ -108,9 +113,12 @@ g = sns.catplot(
 g._legend.remove()
 plt.legend(title=None, loc='upper right')
 
+plt.savefig("filebench_latency.png")
 plt.show()
+plt.clf()
 
 
+plt.figure(figsize=(20, 16))
 g = sns.catplot(
     data=df, kind="bar",
     x="Workload", y="Operations/s", hue="Version",
@@ -118,14 +126,9 @@ g = sns.catplot(
 )
 g._legend.remove()
 plt.legend(title=None, loc='upper right')
+
+plt.savefig("filebench_opssec.png")
 plt.show()
-
-print(df.groupby('Workload')['Ratio r/w'].mean())
-
-# g = sns.catplot(
-#     data=df, kind="bar",
-#     x="Workload", y="Ratio r/w"
-# )
-# plt.show()
+plt.clf()
 
 # vim: set textwidth=0:

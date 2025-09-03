@@ -96,7 +96,6 @@ filename = sys.argv[1]
 df = parse_file_to_csv(filename)
 
 pd.set_option('display.max_columns', None)
-print(df)
 
 df["total read"] = df["local read"] + df["distant read"]
 df["total write"] = df["local write"] + df["distant write"]
@@ -105,19 +104,28 @@ df["ratio local write"] = df["local write"] / df["total write"]
 df['ratio local'] = df.apply(lambda row: row['ratio local read'] if row['operation'] == 'read' else row['ratio local write'], axis=1)
 df['ratio local memory accesses'] = df["node-loads"] / (df["node-loads"] + df["node-load-misses"])
 
+plt.figure(figsize=(20, 16))
 plt.rcParams.update({'font.size': 24})
 ax = sns.barplot(data=df[df["operation"] == "read"], x='read percentage', y='bandwidth (GiB/s)', hue='patch', hue_order=[linux, pacar])
 ax.set(ylabel='read bandwidth (GiB/s)')
 plt.legend(title='')
+plt.savefig("fio_percentage_read_bandwidth.png")
 plt.show()
+plt.clf()
+
+plt.figure(figsize=(20, 16))
 ax = sns.barplot(data=df[df["operation"] == "write"], x='read percentage', y='bandwidth (GiB/s)', hue='patch', hue_order=[linux, pacar])
 ax.set(ylabel='write bandwidth (GiB/s)')
 plt.legend(title='')
+plt.savefig("fio_percentage_write_bandwidth.png")
 plt.show()
+plt.clf()
+
+plt.figure(figsize=(20, 16))
 sns.barplot(data=df, x='read percentage', y='ratio local memory accesses', hue='patch', hue_order=[linux, pacar])
 plt.legend(title='')
+plt.savefig("fio_percentage_ratio.png")
 plt.show()
-# sns.catplot(data=df, kind='bar', x='operation', y='ratio local', hue='patch')
-# plt.tight_layout()
+plt.clf()
 
 # vim: set textwidth=0:

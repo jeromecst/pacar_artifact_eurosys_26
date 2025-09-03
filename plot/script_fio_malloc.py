@@ -124,36 +124,32 @@ df.loc[df['Time (s)'] < 30, 'Malloc (GB)'] = 0
 
 df["Memory Footprint (GB)"] = df["struct duplication"] * 48 / 1024**3
 
+plt.figure(figsize=(20, 16))
 plt.rcParams.update({'font.size': 24})
 ax = sns.lineplot(data=df, x='Time (s)', y='Bandwidth (GiB/s)', size='Version', hue='Feature')
 ax.set_ylim(0, None)
 plt.legend(title='')
+plt.savefig("fio_malloc_bandwidth.png")
 plt.show()
+plt.clf()
 
+plt.figure(figsize=(20, 16))
 plt.rcParams.update({'font.size': 24})
 ax = sns.lineplot(data=df, x='Time (s)', y='Malloc (GB)', size='Version', hue='Feature')
 ax.set_ylim(0, None)
 plt.legend(title='')
+plt.savefig("fio_malloc_time.png")
 plt.show()
+plt.clf()
 
 for metric in ["switch main", "migrations main", "migrations twin", "remove mapping main", "remove mapping twin"]:
+    plt.figure(figsize=(20, 16))
     plt.rcParams.update({'font.size': 24})
     ax = sns.lineplot(data=df, x='Time (s)', y=metric, size='Version', hue='Feature')
     ax.set_ylim(0, None)
     plt.legend(title='')
+    plt.savefig(f"fio_malloc_{metric}.png")
     plt.show()
-
-# sns.lineplot(data=df, x='Time (s)', y='Twins', size='duplication', hue='feature')
-# sns.lineplot(data=df, x='Time (s)', y='Cached', size='duplication', hue='feature')
-
-# ax = sns.lineplot(data=df, x='Time (s)', y='ratio local read', size='duplication', hue='feature')
-# ax.set_ylim(0, None)
-# plt.legend(title='')
-# plt.show()
-
-# sns.lineplot(data=df, x='Time (s)', y='Memory Footprint (GB)', size='duplication', hue='feature')
-
-# plt.tight_layout()
-# plt.show()
+    plt.clf()
 
 # vim: set textwidth=0:
