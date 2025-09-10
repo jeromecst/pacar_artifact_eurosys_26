@@ -84,7 +84,13 @@ exp_dbbench() {
 	# the other parameters are used to disable compaction and internal rocksdb
 	# caching mechanism
 	cd "$cur"/rocksdb/
-	./db_bench --benchmarks="$3" --use_existing_db=1\
+	node=$4
+	if [ -n "$node" ]; then
+		numacmd="numactl -N $node"
+	else
+		numacmd=""
+	fi
+	$numacmd ./db_bench --benchmarks="$3" --use_existing_db=1\
 		--threads="$2" --batch_size=30 --max_background_jobs=0\
 		--max_write_buffer_number=1 --db=/mnt/rocksdb --wal_dir=/mnt/wall\
 		--num=1000000 --key_size=20 --value_size=8000 --block_size=8192\
@@ -262,18 +268,19 @@ elif [ "$exp" == filebench ]; then
 		done
 	done
 elif [ "$exp" == dbbench_local_vs_distant ]; then
+	echo 0 > /sys/kernel/mm/duplication/enabled
 	rm /mnt/rocksdb/ -fr
 	if ! [ -d /mnt/rocksdb_save ]; then
-	       	"load_$exp"
+		load_dbbench
 		cp -r /mnt/rocksdb /mnt/rocksdb_save
 	fi
 	for i in $(seq 1); do
 		for local in 0 1; do
+			rm -fr /mnt/rocksdb/
+			cp -r /mnt/rocksdb_save/ /mnt/rocksdb/
+
 			sync
 			echo 1 > /proc/sys/vm/drop_caches
-			echo 0 > /sys/kernel/mm/duplication/stats
-
-			echo 0 > /sys/kernel/mm/duplication/enabled
 
 			if [ $local -eq 0 ]; then
 				find /mnt/rocksdb/ -type f -print0 | xargs -I {} -0 -P"$threads_half" numactl -N 1 cat "{}" >/dev/null
@@ -282,17 +289,16 @@ elif [ "$exp" == dbbench_local_vs_distant ]; then
 			fi
 
 			echo "patch: $patch iter: $i" | tee -a "$filename"
-			numactl -N 1 bash -c "$(declare -f exp_dbbench); exp_dbbench_manual 60 $threads_half" | grep -v finished  | tee -a "$filename"
+			exp_dbbench 60 $threads_half multireadrandom 1 | grep -v finished  | tee -a "$filename"
 			< /sys/kernel/mm/duplication/stats tee -a "$filename"
 		done
 	done
 	echo 1 > /proc/sys/kernel/numa_balancing
 elif [ "$exp" == dbbench ]; then
-	mkdir -p /mnt/rocksdb
 	echo 0 > /sys/kernel/mm/duplication/enabled
 	rm /mnt/rocksdb/ -fr
 	if ! [ -d /mnt/rocksdb_save ]; then
-	       	load_dbbench
+		load_dbbench
 		cp -r /mnt/rocksdb /mnt/rocksdb_save
 	fi
 	for patch in 0 1; do
