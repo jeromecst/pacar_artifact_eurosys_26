@@ -35,7 +35,7 @@ It will download dependencies, fetch Linux sources, apply the PaCaR patch, compi
 ```sh
 git clone https://github.com/jeromecst/pacar_artifact_eurosys_26
 cd pacar_artifact_eurosys_26
-./pacar-setup.sh
+sudo ./pacar-setup.sh
 ```
 
 Reboot on Linux with PaCaR
@@ -46,8 +46,8 @@ PaCaR should now be installed on the system, now is a good time to reboot with `
 ```sh
 version=6.12.20
 # Reboot on the new kernel
-kexec -l /boot/vmlinuz-$version --initrd /boot/initrd.img-$version --reuse-cmdline
-kexec -e
+sudo kexec -l /boot/vmlinuz-$version --initrd /boot/initrd.img-$version --reuse-cmdline
+sudo kexec -e
 ```
 
 Before running experiments, verify that PaCaR is correctly installed on the system:
@@ -69,19 +69,19 @@ The appropriate python packages should be already installed using the script `pa
 
 # E1 (40GB, 50 compute-minutes): this produces figure 4
 # Warning: this benchmark doesn't scale well if your system has more than 100 threads
-./run_exp.sh fio_percentage
+sudo ./run_exp.sh fio_percentage
 python3 ./plot/script_fio_percentages.py exp_results/fio_percentage_XXXX-XX-XX_XX:XX:XX
 
 # E2 (80GB, 2 compute-hours): this produces figure 5
-./run_exp.sh fio_malloc
+sudo ./run_exp.sh fio_malloc
 python3 ./plot/script_fio_malloc.py exp_results/fio_malloc_XXXX-XX-XX_XX:XX:XX
 
 # E3 (120 GB, 2.4 compute-hours): this produces figure 6
-./run_exp.sh filebench
+sudo ./run_exp.sh filebench
 python3 ./plot/script_filebench.py exp_results/filebench-XX-XX_XX:XX:XX
 
 # E4 (500 GB, 70 compute-minutes): this produces table 2
-./run_exp.sh dbbench
+sudo ./run_exp.sh dbbench
 python3 ./plot/script_dbbench.py exp_results/dbbench-XX-XX_XX:XX:XX
 ```
 
