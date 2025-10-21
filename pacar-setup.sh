@@ -5,7 +5,7 @@
 version=6.12.20
 proc=$(nproc)
 
-apt install wget tar xz-utils kexec-tools bc make gcc g++ patch flex bison libelf-dev libssl-dev numactl git libtool automake fio linux-perf libgflags-dev python3-numpy python3-seaborn python3-pandas python3-matplotlib coreutils
+apt install wget tar xz-utils kexec-tools bc make gcc g++ patch flex bison libelf-dev libssl-dev numactl git libtool automake fio linux-perf libgflags-dev python3-numpy python3-seaborn python3-pandas python3-matplotlib coreutils libzstd-dev
 
 install_pacar() {
 	if ! [ -d "linux-$version.tar.xz" ]; then

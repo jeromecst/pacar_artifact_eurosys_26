@@ -6,7 +6,7 @@ This is the artifact for the paper "PaCaR: Improved Buffered I/O Locality on NUM
 **Requirement**: Debian 12 or Debian 13 with an XFS root filesystem. A tutorial to install Debian with XFS can be found [here](pdf/tutorial_debian_xfs.pdf)
 
 **Hardware requirement**: These experiments are scaled for a 2-nodes NUMA system. It has been tested on 2x24 threads and 256 GB ram, but most of the experiment are scaling automatically depending on your configuration. 
-1 TB disk space is required. 
+1 TB disk space is required to run the experiment, additionnalty, a 50 GB partition is recommended to build the kernel.
 
 This artifact contains the following components:
 
@@ -23,7 +23,7 @@ This artifact contains the following components:
 ├── 📁 exp_results (generated folder)
 │   └── 📑 Outputs from experiments
 ├── 📥 pacar-setup.sh   (install PaCaR)
-└── 🚀 run_exp.sh       (run benchmarks)
+└── 🚀 run-exp.sh       (run benchmarks)
 ```
 
 Setup
@@ -69,19 +69,19 @@ The appropriate python packages should be already installed using the script `pa
 
 # E1 (40GB, 50 compute-minutes): this produces figure 4
 # Warning: this benchmark doesn't scale well if your system has more than 100 threads
-sudo ./run_exp.sh fio_percentage
+sudo ./run-exp.sh fio_percentage
 python3 ./plot/script_fio_percentages.py exp_results/fio_percentage_XXXX-XX-XX_XX:XX:XX
 
 # E2 (80GB, 2 compute-hours): this produces figure 5
-sudo ./run_exp.sh fio_malloc
+sudo ./run-exp.sh fio_malloc
 python3 ./plot/script_fio_malloc.py exp_results/fio_malloc_XXXX-XX-XX_XX:XX:XX
 
 # E3 (120 GB, 2.4 compute-hours): this produces figure 6
-sudo ./run_exp.sh filebench
+sudo ./run-exp.sh filebench
 python3 ./plot/script_filebench.py exp_results/filebench-XX-XX_XX:XX:XX
 
 # E4 (500 GB, 70 compute-minutes): this produces table 2
-sudo ./run_exp.sh dbbench
+sudo ./run-exp.sh dbbench
 python3 ./plot/script_dbbench.py exp_results/dbbench-XX-XX_XX:XX:XX
 ```
 
